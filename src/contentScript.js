@@ -38,6 +38,13 @@ var observer = new MutationObserver(function (mutations) {
         console.log("clone", clone.querySelector("path").getAttribute("d"));
         clone.addEventListener("click", async function (elem) {
           const closest = elem.srcElement.closest('[data-testid$="sessionCard"]');
+
+          // 2022-10-10 - JH:
+          // Was not able to persist multiple hearted sessions without refreshing the page.
+          // Copied these lines from above to here as a quick fix.
+          const stored = await chrome.storage.sync.get(['sessions']);
+          const sessions = stored.sessions || [];
+
           if (!sessions.includes(sessionId)) {
             sessions.push(sessionId);
             clone.querySelector("path").setAttribute("d", FILLED_HEART)
